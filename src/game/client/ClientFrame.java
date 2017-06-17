@@ -1,5 +1,6 @@
 package game.client;
 
+import game.Assets;
 import game.client.board.BoardPanel;
 
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ public class ClientFrame extends JFrame {
     private BoardPanel boardPanel;
 
     public ClientFrame() {
+        Assets.load();
         initFrame();
 
         initContainer();

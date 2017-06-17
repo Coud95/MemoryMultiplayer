@@ -1,4 +1,4 @@
-package game.client;
+package game.server;
 
 import com.esotericsoftware.kryonet.Connection;
 
