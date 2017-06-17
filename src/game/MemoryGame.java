@@ -1,5 +1,7 @@
 package game;
 
+import game.client.ClientFrame;
+
 import javax.swing.SwingUtilities;
 
 public class MemoryGame {
