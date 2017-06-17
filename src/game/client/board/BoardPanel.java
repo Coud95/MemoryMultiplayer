@@ -29,7 +29,7 @@ public class BoardPanel extends JPanel {
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
             CardButton buttonOne = new CardButton();
-            buttonOne.setCard(board.cards[i%10]);
+            buttonOne.setCard(board.cards[i]);
             buttonOne.showCardImage();
 
             buttons.add(buttonOne);
