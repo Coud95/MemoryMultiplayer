@@ -14,11 +14,20 @@ public class MemoryServer {
 
     public static boolean isGameStarted = false;
 
+    public static Board board;
+
     public static void main(String args[]) throws IOException {
         Server server = new Server();
 
+        board = new Board();
+
         Kryo kryo = server.getKryo();
         kryo.register(Player.class);
+        kryo.register(Request.class);
+
+        kryo.register(Board.class);
+        kryo.register(Card.class);
+        kryo.register(Card[].class);
 
         server.start();
         server.bind(54555, 54777);
@@ -54,6 +63,11 @@ public class MemoryServer {
                     } else {
                         System.out.println("{SERVER} MAX PLAYER!");
                         connection.sendTCP(ServerRespond.NOT_CONNECTED);
+                    }
+                } else if (object instanceof Request) {
+                    Request req = ((Request)object);
+                    if (req.text.equals(Request.GET_BOARD)) {
+                        connection.sendTCP(board);
                     }
                 }
             }

@@ -1,15 +1,25 @@
 package game.client.board;
 
+import game.server.Board;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardPanel extends JPanel {
     public static final int MAX_BUTTONS = 20;
     public static final int ROWS = 4;
     public static final int COLS = 5;
 
-    public BoardPanel() {
+    public Board board;
+
+    public List<CardButton> buttons = new ArrayList<>(MAX_BUTTONS);
+
+    public BoardPanel(Board board) {
+        this.board = board;
+
         initPanel();
     }
 
@@ -18,7 +28,13 @@ public class BoardPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Board"));
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
-            add(new CardButton());
+            CardButton buttonOne = new CardButton();
+            buttonOne.setCard(board.cards[i%10]);
+            buttonOne.showCardImage();
+
+            buttons.add(buttonOne);
+
+            add(buttonOne);
         }
     }
 }

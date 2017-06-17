@@ -1,6 +1,5 @@
 package game.client;
 
-import game.Assets;
 import game.client.board.BoardPanel;
 
 import javax.swing.JFrame;
@@ -17,20 +16,27 @@ public class ClientFrame extends JFrame {
     private BoardPanel boardPanel;
 
     public ClientFrame() {
-        Assets.load();
-        initFrame();
+        client = new MemoryClient();
+        client.start();
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        initFrame();
         initContainer();
 
-        client = new MemoryClient();
-
-        client.start();
+        if (!client.isConnected) {
+            System.exit(0);
+        }
     }
 
     private void initContainer() {
         container = new JPanel(new BorderLayout());
 
-        boardPanel = new BoardPanel();
+        boardPanel = new BoardPanel(client.board);
         container.add(boardPanel);
 
         setContentPane(container);
