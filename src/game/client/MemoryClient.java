@@ -14,8 +14,6 @@ public class MemoryClient extends Thread {
 
     public Board board;
 
-    public boolean isConnected = false;
-
     public MemoryClient() {
         this.client = new Client();
     }
@@ -46,13 +44,12 @@ public class MemoryClient extends Thread {
             public void received(Connection connection, Object object) {
                 if (object instanceof String) {
                     String res = (String)object;
+                    System.out.println(res);
                     if (res.equals(ServerRespond.CONNECTED)) {
                         System.out.println("Player connected to server");
-                        isConnected = true;
                     }
                     if (res.equals(ServerRespond.NOT_CONNECTED)) {
                         System.out.println("Player not connected to server");
-                        isConnected = false;
                     }
                     if (res.equals(ServerRespond.WAITING)) {
                         System.out.println("Waiting for player");

@@ -20,7 +20,7 @@ public class ClientFrame extends JFrame {
         client.start();
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -28,9 +28,6 @@ public class ClientFrame extends JFrame {
         initFrame();
         initContainer();
 
-        if (!client.isConnected) {
-            System.exit(0);
-        }
     }
 
     private void initContainer() {

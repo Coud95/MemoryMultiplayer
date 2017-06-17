@@ -8,6 +8,11 @@ public class Board {
     public Card[] cards;
     private int pairs = 10;
 
+    public Card lastCard;
+    public Card firstCard;
+    public Card secondCard;
+
+
     public Board() {
         cards = new Card[pairs * 2];
 
@@ -28,5 +33,19 @@ public class Board {
         Collections.shuffle(shuffledCards);
 
         cards = (Card[])shuffledCards.toArray();
+    }
+
+    public void checkCards() {
+        if (firstCard == null && secondCard == null) {
+            firstCard = lastCard;
+        }
+
+        if (firstCard != null && firstCard != lastCard && secondCard == null) {
+            secondCard = lastCard;
+            endTurn();
+        }
+    }
+
+    private void endTurn() {
     }
 }

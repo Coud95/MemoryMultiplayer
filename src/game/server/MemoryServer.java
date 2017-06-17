@@ -45,19 +45,18 @@ public class MemoryServer {
                             playerOne.name = "PLAYER ONE";
 
                             System.out.println(playerOne.name + " CONNECTED");
-                            playerOne.connection.sendTCP(ServerRespond.CONNECTED);
-                            playerOne.connection.sendTCP(ServerRespond.WAITING);
+                            connection.sendTCP(ServerRespond.CONNECTED);
+                            connection.sendTCP(ServerRespond.WAITING);
                             System.out.println("Server is waiting form player two");
                         }
                         if (playerCount == 2) {
                             playerTwo = (Player)object;
                             playerTwo.connection = connection;
                             playerTwo.name = "PLAYER TWO";
-                            isGameStarted = true;
-
                             System.out.println(playerTwo.name + " CONNECTED");
-                            playerTwo.connection.sendTCP(ServerRespond.CONNECTED);
+                            connection.sendTCP(ServerRespond.CONNECTED);
 
+                            isGameStarted = true;
                             System.out.println("LET THE GAME BEGIN");
                         }
                     } else {
@@ -67,6 +66,7 @@ public class MemoryServer {
                 } else if (object instanceof Request) {
                     Request req = ((Request)object);
                     if (req.text.equals(Request.GET_BOARD)) {
+                        System.out.println("[server] sending board " + board);
                         connection.sendTCP(board);
                     }
                 }

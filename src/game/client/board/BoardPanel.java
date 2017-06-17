@@ -28,12 +28,10 @@ public class BoardPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Board"));
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
-            CardButton buttonOne = new CardButton();
+            CardButton buttonOne = new CardButton(board);
+
             buttonOne.setCard(board.cards[i]);
-            buttonOne.showCardImage();
-
             buttons.add(buttonOne);
-
             add(buttonOne);
         }
     }
