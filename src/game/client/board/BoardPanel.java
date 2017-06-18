@@ -1,11 +1,13 @@
 package game.client.board;
 
-import game.server.Board;
+import game.client.MemoryClient;
 import game.server.Card;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,15 +19,17 @@ public class BoardPanel extends JPanel {
     public static final int ROWS = 4;
     public static final int COLS = 5;
 
-    public Board board;
+    private MemoryClient client;
 
     CardButton lastButton;
 
+    public JPanel buttonsPanel = new JPanel();
     public List<CardButton> buttons = new ArrayList<>(MAX_BUTTONS);
+    public JButton endTurnButton;
 
     public void updateBoard() {
         System.out.println("[client] updated boardpanel");
-        for (Card card : board.cards) {
+        for (Card card : client.board.cards) {
             if (card.matched) {
                 System.out.println("[client] card to deactivate");
                 for (CardButton button : buttons) {
@@ -38,10 +42,54 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    public BoardPanel(MemoryClient client) {
+        this.client = client;
+
+        initPanel();
+//        board.checkButtons(this);
+    }
+
+    private void initPanel() {
+        buttonsPanel.setLayout(new GridLayout(ROWS, COLS));
+
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createTitledBorder("Board"));
+
+        ButtonListener listener = new ButtonListener();
+
+        for (int i = 0; i < MAX_BUTTONS; i++) {
+            CardButton button = new CardButton();
+
+            button.setCard(client.board.cards[i]);
+            button.addActionListener(listener);
+
+            buttons.add(button);
+            buttonsPanel.add(button);
+        }
+
+        endTurnButton = new JButton("END TURN");
+        endTurnButton.addActionListener(new EndTurnListener());
+
+        add(buttonsPanel, BorderLayout.CENTER);
+        add(endTurnButton, BorderLayout.SOUTH);
+    }
+
+    private class EndTurnListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(client);
+            System.out.println(client.board);
+            System.out.println("[client] SENDING BOARD TO SERVER");
+            client.sendBoard(client.board);
+        }
+    }
+
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (board.isGameStarted) {
+            if (client.board.isGameStarted) {
+                updateBoard();
+
                 CardButton button = (CardButton)e.getSource();
 
                 if (lastButton == null) {
@@ -50,56 +98,32 @@ public class BoardPanel extends JPanel {
 
                 button.showCardImage();
 
-                board.lastCard = button.card;
+                client.board.lastCard = button.card;
 
-                final boolean cardPicked = board.isPairOfCardsPicked();
+                final boolean cardPicked = client.board.isPairOfCardsPicked();
 
-                if (cardPicked && board.isPairFound) {
+                if (cardPicked && client.board.isPairFound) {
                     System.out.println("[client] Deactivate buttons");
-                    lastButton.setEnabled(!board.firstCard.matched);
-                    button.setEnabled(!board.secondCard.matched);
+                    lastButton.setEnabled(!client.board.firstCard.matched);
+                    button.setEnabled(!client.board.secondCard.matched);
                     lastButton = null;
-                    board.firstCard = null;
-                    board.secondCard = null;
-                    board.isPairFound = true;
-                } else if (!board.isPairFound) {
+                    client.board.firstCard = null;
+                    client.board.secondCard = null;
+                    client.board.isPairFound = true;
+                } else if (!client.board.isPairFound) {
                     System.out.println("[client] HIDE BUTTONS!!");
                     new Timer(100, (event) -> {
                         lastButton.setIcon(null);
                         button.setIcon(null);
                         lastButton = null;
-                        board.firstCard = null;
-                        board.secondCard = null;
-                        board.isPairFound = true;
+                        client.board.firstCard = null;
+                        client.board.secondCard = null;
+                        client.board.isPairFound = true;
                     }).start();
                 }
             } else {
                 System.out.println("[client] GAME IS NOT STARTED, YOU CANT CLICKED ANY BUTTON AT THIS TIME");
             }
-        }
-    }
-
-    public BoardPanel(Board board) {
-        this.board = board;
-
-        initPanel();
-//        board.checkButtons(this);
-    }
-
-    private void initPanel() {
-        setLayout(new GridLayout(ROWS, COLS));
-        setBorder(BorderFactory.createTitledBorder("Board"));
-
-        ButtonListener listener = new ButtonListener();
-
-        for (int i = 0; i < MAX_BUTTONS; i++) {
-            CardButton button = new CardButton();
-
-            button.setCard(board.cards[i]);
-            button.addActionListener(listener);
-
-            buttons.add(button);
-            add(button);
         }
     }
 }

@@ -78,7 +78,6 @@ public class MemoryServer {
                 if (object instanceof Board) {
                     System.out.println("[server] " + "UPDATED BOARD RECEIVED");
                     board = (Board)object;
-                    board.boardSent = false;
                     if (board.isPlayerOneTurn) {
                         System.out.println("[server] " + "SEND TO PLAYER ONE");
                         playerOne.connection.sendTCP(board);

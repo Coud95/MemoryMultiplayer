@@ -13,7 +13,6 @@ public class MemoryClient extends Thread {
     private Player player;
 
     public Board board;
-    public boolean boardSent = false;
 
     public MemoryClient() {
         this.client = new Client();
@@ -75,6 +74,5 @@ public class MemoryClient extends Thread {
 
     public void sendBoard(Board board) {
         client.sendTCP(board);
-        board.boardSent = true;
     }
 }

@@ -13,8 +13,6 @@ public class Board {
 
     public boolean isPlayerOneTurn = true;
 
-    public boolean boardSent = false;
-
     public Card lastCard;
     public Card firstCard;
     public Card secondCard;
@@ -56,7 +54,6 @@ public class Board {
             secondCard = lastCard;
             System.out.println("Second card selected! " + secondCard);
             endTurn();
-
             return true;
         }
         return false;
@@ -66,6 +63,7 @@ public class Board {
         isPlayerOneTurn = !isPlayerOneTurn;
         System.out.println((isPlayerOneTurn ? "Player one " : "Player two") + " turn");
 
+        System.out.println("IS firstcard null? " + firstCard);
         if (firstCard.id == secondCard.id) {
             firstCard.matched = secondCard.matched = true;
             System.out.println("PAIR MATCHED");

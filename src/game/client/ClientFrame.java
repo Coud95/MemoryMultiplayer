@@ -5,7 +5,6 @@ import game.client.board.InfoPanel;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,24 +29,10 @@ public class ClientFrame extends JFrame {
 
         initFrame();
         initContainer();
-
-        new Timer(1000, (e) -> {
-            boardPanel.board = client.board;
-            System.out.println("[client] received board: " + boardPanel.board);
-
-            System.out.println(boardPanel.board.isTurnEnded);
-            if (boardPanel.board.isTurnEnded && !boardPanel.board.boardSent) {
-                System.out.println("SENDING BOARD TO SERVER");
-                client.sendBoard(boardPanel.board);
-            }
-            if (boardPanel.board.boardSent) {
-                boardPanel.updateBoard();
-            }
-        }).start();
     }
 
     private void initContainer() {
-        boardPanel = new BoardPanel(client.board);
+        boardPanel = new BoardPanel(client);
         infoPanel = new InfoPanel();
 
         container = new JPanel(new BorderLayout());
