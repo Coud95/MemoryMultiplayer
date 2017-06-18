@@ -1,8 +1,11 @@
 package game.server;
 
+import javax.swing.Timer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+
 
 public class Board {
     public static final int MAX_PAIRS = 10;
@@ -58,6 +61,7 @@ public class Board {
             secondCard = lastCard;
             System.out.println("Second card selected! " + secondCard);
             endTurn();
+
             return true;
         }
         return false;

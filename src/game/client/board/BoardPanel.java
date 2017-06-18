@@ -4,6 +4,7 @@ import game.server.Board;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +36,9 @@ public class BoardPanel extends JPanel {
 
             board.lastCard = button.card;
 
-            if (board.isPairOfCardsPicked() && board.isPairFound) {
+            final boolean cardPicked = board.isPairOfCardsPicked();
+
+            if (cardPicked && board.isPairFound) {
                 System.out.println("LOLOLOLOLOLOL");
                 lastButton.setEnabled(!board.firstCard.matched);
                 button.setEnabled(!board.secondCard.matched);
@@ -45,14 +48,15 @@ public class BoardPanel extends JPanel {
                 board.isPairFound = true;
             } else if (!board.isPairFound) {
                 System.out.println(" DLACZEGO SIE TU ZERUJE!??!?!");
-                lastButton.setIcon(null);
-                button.setIcon(null);
-                lastButton = null;
-                board.firstCard = null;
-                board.secondCard = null;
-                board.isPairFound = true;
+                new Timer(100, (event) -> {
+                    lastButton.setIcon(null);
+                    button.setIcon(null);
+                    lastButton = null;
+                    board.firstCard = null;
+                    board.secondCard = null;
+                    board.isPairFound = true;
+                }).start();
             }
-
         }
     }
 
