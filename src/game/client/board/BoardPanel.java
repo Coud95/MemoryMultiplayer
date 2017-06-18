@@ -80,6 +80,13 @@ public class BoardPanel extends JPanel {
             System.out.println(client);
             System.out.println(client.board);
             System.out.println("[client] SENDING BOARD TO SERVER");
+            if (client.board.isPlayerOneTurn && !client.board.isPlayerTwoTurn) {
+                client.board.isPlayerOneTurn = false;
+                client.board.isPlayerTwoTurn = true;
+            } else {
+                client.board.isPlayerOneTurn = true;
+                client.board.isPlayerTwoTurn = false;
+            }
             client.sendBoard(client.board);
         }
     }

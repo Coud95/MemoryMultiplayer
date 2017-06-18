@@ -12,6 +12,7 @@ public class Board {
     public Card[] cards;
 
     public boolean isPlayerOneTurn = true;
+    public boolean isPlayerTwoTurn = false;
 
     public Card lastCard;
     public Card firstCard;
@@ -60,7 +61,6 @@ public class Board {
     }
 
     public void endTurn() {
-        isPlayerOneTurn = !isPlayerOneTurn;
         System.out.println((isPlayerOneTurn ? "Player one " : "Player two") + " turn");
 
         System.out.println("IS firstcard null? " + firstCard);

@@ -81,7 +81,7 @@ public class MemoryServer {
                     if (board.isPlayerOneTurn) {
                         System.out.println("[server] " + "SEND TO PLAYER ONE");
                         playerOne.connection.sendTCP(board);
-                    } else {
+                    } else if (board.isPlayerTwoTurn) {
                         System.out.println("[server] " + "SEND TO PLAYER TWO");
                         playerTwo.connection.sendTCP(board);
                     }
