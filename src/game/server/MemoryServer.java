@@ -12,8 +12,6 @@ public class MemoryServer {
     public static Player playerTwo;
     public static int playerCount = 0;
 
-    public static boolean isGameStarted = false;
-
     public static Board board;
 
     public static void main(String args[]) throws IOException {
@@ -32,42 +30,61 @@ public class MemoryServer {
         server.start();
         server.bind(54555, 54777);
 
-        System.out.println("SERVER STARTED");
+        System.out.println("[server] SERVER STARTED");
+        System.out.println("[server] " + (board.isPlayerOneTurn ? "Player ONE" : "Player TWO") + " started");
 
         server.addListener(new Listener() {
             public void received(Connection connection, Object object) {
                 if (object instanceof Player) {
-                    if (!isGameStarted) {
+                    if (!board.isGameStarted) {
                         playerCount++;
                         if (playerCount == 1) {
                             playerOne = (Player)object;
                             playerOne.connection = connection;
                             playerOne.name = "PLAYER ONE";
 
-                            System.out.println(playerOne.name + " CONNECTED");
+                            System.out.println("[server] " + playerOne.name + " CONNECTED");
                             connection.sendTCP(ServerRespond.CONNECTED);
                             connection.sendTCP(ServerRespond.WAITING);
-                            System.out.println("Server is waiting form player two");
+                            System.out.println("[server] Server is waiting form player two");
                         }
                         if (playerCount == 2) {
                             playerTwo = (Player)object;
                             playerTwo.connection = connection;
                             playerTwo.name = "PLAYER TWO";
-                            System.out.println(playerTwo.name + " CONNECTED");
+                            System.out.println("[server] " + playerTwo.name + " CONNECTED");
                             connection.sendTCP(ServerRespond.CONNECTED);
 
-                            isGameStarted = true;
-                            System.out.println("LET THE GAME BEGIN");
+                            board.isGameStarted = true;
+                            System.out.println("[server] LET THE GAME BEGIN");
+
+                            System.out.println("[server] UPDATED BOARD IS SENDING TO PLAYER ONE");
+                            connection.sendTCP(board);
+                            playerOne.connection.sendTCP(ServerRespond.SEND_BOARD);
+                            playerOne.connection.sendTCP(board);
                         }
                     } else {
-                        System.out.println("{SERVER} MAX PLAYER!");
+                        System.out.println("[server] MAX PLAYER!");
                         connection.sendTCP(ServerRespond.NOT_CONNECTED);
                     }
-                } else if (object instanceof Request) {
+                }
+                if (object instanceof Request) {
                     Request req = ((Request)object);
                     if (req.text.equals(Request.GET_BOARD)) {
                         System.out.println("[server] sending board " + board);
                         connection.sendTCP(board);
+                    }
+                }
+                if (object instanceof Board) {
+                    System.out.println("[server] " + "UPDATED BOARD RECEIVED");
+                    board = (Board)object;
+                    board.boardSent = false;
+                    if (board.isPlayerOneTurn) {
+                        System.out.println("[server] " + "SEND TO PLAYER ONE");
+                        playerOne.connection.sendTCP(board);
+                    } else {
+                        System.out.println("[server] " + "SEND TO PLAYER TWO");
+                        playerTwo.connection.sendTCP(board);
                     }
                 }
             }

@@ -1,20 +1,19 @@
 package game.server;
 
-import javax.swing.Timer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
-
 public class Board {
     public static final int MAX_PAIRS = 10;
 
-    private int pairsLeft = MAX_PAIRS;
+    public boolean isGameStarted = false;
 
     public Card[] cards;
 
-    boolean isPlayerOneTurn = true;
+    public boolean isPlayerOneTurn = true;
+
+    public boolean boardSent = false;
 
     public Card lastCard;
     public Card firstCard;
@@ -36,11 +35,6 @@ public class Board {
         }
 
 //        shuffleCards();
-        choosePlayer();
-    }
-
-    private void choosePlayer() {
-        System.out.println((isPlayerOneTurn ? "Player one " : "Player two") + " turn");
     }
 
     private void shuffleCards() {
@@ -52,6 +46,7 @@ public class Board {
     }
 
     public boolean isPairOfCardsPicked() {
+        isTurnEnded = false;
         if (firstCard == null && secondCard == null) {
             firstCard = lastCard;
             System.out.println("First card selected! " + firstCard);
@@ -75,7 +70,6 @@ public class Board {
             firstCard.matched = secondCard.matched = true;
             System.out.println("PAIR MATCHED");
             isPairFound = true;
-            pairsLeft--;
         } else {
             isPairFound = false;
             System.out.println("PAIR NOT MATCHED");

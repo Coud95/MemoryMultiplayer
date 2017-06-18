@@ -13,6 +13,7 @@ public class MemoryClient extends Thread {
     private Player player;
 
     public Board board;
+    public boolean boardSent = false;
 
     public MemoryClient() {
         this.client = new Client();
@@ -46,16 +47,21 @@ public class MemoryClient extends Thread {
                     String res = (String)object;
                     System.out.println(res);
                     if (res.equals(ServerRespond.CONNECTED)) {
-                        System.out.println("Player connected to server");
+                        System.out.println("[client] Player connected to server");
                     }
                     if (res.equals(ServerRespond.NOT_CONNECTED)) {
-                        System.out.println("Player not connected to server");
+                        System.out.println("[client] Player not connected to server");
                     }
                     if (res.equals(ServerRespond.WAITING)) {
-                        System.out.println("Waiting for player");
+                        System.out.println("[client] Waiting for player");
                     }
-                } else if (object instanceof Board) {
+                    if (res.equals(ServerRespond.SEND_BOARD)) {
+                        System.out.println("[client] Receive updated board");
+                    }
+                }
+                if (object instanceof Board) {
                     board = ((Board)object);
+                    System.out.println("[client] get board from server | " + board);
                 }
             }
         });
@@ -65,5 +71,10 @@ public class MemoryClient extends Thread {
         Request req = new Request();
         req.text = request;
         client.sendTCP(req);
+    }
+
+    public void sendBoard(Board board) {
+        client.sendTCP(board);
+        board.boardSent = true;
     }
 }
